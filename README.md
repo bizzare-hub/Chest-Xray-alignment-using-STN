@@ -14,7 +14,7 @@ The repository contains reproducible `PyTorch` and `Pytorch Lightning` code for 
 
 The training of our alignment model is GPU-based, inference can be done both on CPU or GPU. The only requirement for the gpu type is to be compatible with **CUDA 11.2**.
 
-We highly recommend to use conda to build an appropriate environment. Working version could be created using `environment.yml` configuration file as follows:
+We highly recommend to use `anaconda` to build an appropriate environment. Working version could be created using `environment.yml` configuration file as follows:
 ```
 conda env create -f environment.yml
 ```
