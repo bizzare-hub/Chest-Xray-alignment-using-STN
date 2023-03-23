@@ -21,7 +21,7 @@ conda env create -f environment.yml
 
 ## Repository structure
 
-Evaluation of the model is issued in the form of pretty self-explanatory single jupyter notebook `Alignment (Evaluation).ipynb`. For convenience, some of the results will be presented further. Auxilary source code is moved to `.py` modules (`src/`), `hydra` configs are located in `configs/` to preserve the structure recommended by authors. 
+Evaluation of the model is issued in the form of pretty self-explanatory single jupyter notebook `Alignment (Evaluation).ipynb`. For convenience, some of the results will be presented further. Auxilary source code is moved to `.py` modules (`src/`), `hydra` configs are located in `configs/` to preserve the structure recommended by authors.
 
 ### Training
 
@@ -30,3 +30,9 @@ Minimal required steps to run the training pipeline:
 * download [Chest X-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC/folder/36938765345) dataset (download full `images/` directory and unzip all the data in it)
 * in `configs/data/nih.yaml`, change the **main_dir** parameter to the directory path where the dataset downloaded from the previous step is located
 * run `python run_training.py` in the following directory
+
+### In-depth description
+
+In this section we present a deeper explanation of the code structure:
+
+* 
