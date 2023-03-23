@@ -131,3 +131,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+#tex
+/tex/main.pdf
+/tex/main.synctex.gz
