@@ -46,4 +46,4 @@ In this section we present a deeper explanation of the code structure:
 
 Examples of our **Alignment network** on *Chest X-ray14* dataset (**Initial** is an input chest, **Aligned** is the aligned version outputted by our model):
 
-<p align="center"><img src="images/alignment_results.png" width="450" /></p>
+<p align="center"><img src="images/alignment_results.png" width="600" /></p>
