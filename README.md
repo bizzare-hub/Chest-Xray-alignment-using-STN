@@ -41,3 +41,7 @@ In this section we present a deeper explanation of the code structure:
 * `src/modules.py` -- contains implementation of our neural network. To obtain pretrained SotA neural networks we use [timm](https://github.com/huggingface/pytorch-image-models) repository
 * `src/models.py` -- `pytorch-lightning` wrapper around our model
 * `src/train.py` -- main function that collects all the configurations, initializes all modules and runs training
+
+## Results
+
+Examples of our **Alignment network** on *Chest X-ray14* dataset (Initial is an input Chest X-ray14, Aligned is the aligned version outputted by our model):
