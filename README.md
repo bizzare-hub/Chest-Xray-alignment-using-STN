@@ -8,7 +8,7 @@ Andrey Galichin\
 Evgeny Gurov\
 Arkadiy Vladimirov
 
-The repository contains reproducible `PyTorch` and `Pytorch Lightning` code for training and inference of our model which produces **properly aligned Chest X-ray images**. For convenience of performing different experiments effectively, we utilize `hydra` configs which can be found in `configs/`. We also provide some examples of our model performance, using Chest X-ray images from [Chest X-ray14](https://arxiv.org/pdf/1705.02315v5.pdf) dataset.
+The repository contains reproducible `PyTorch` and `Pytorch Lightning` code for training and inference of our model which produces **properly aligned Chest X-ray images**. For convenience of performing different experiments effectively, we utilize `hydra` configs. We also provide some examples of our model performance, using Chest X-ray images from [Chest X-ray14](https://arxiv.org/pdf/1705.02315v5.pdf) dataset.
 
 ## Prerequisites
 
@@ -21,4 +21,4 @@ conda env create -f environment.yml
 
 ## Repository structure
 
-All the experiments are issued in the form of pretty self-explanatory single jupyter notebook `Alignment (Evaluation).ipynb`. For convenience, the majority of the evaluation output is preserved. Auxilary source code is moved to `.py` modules (`src/`). 
+All the experiments are issued in the form of pretty self-explanatory single jupyter notebook `Alignment (Evaluation).ipynb`. For convenience, the majority of the evaluation output is preserved. Auxilary source code is moved to `.py` modules (`src/`), `hydra` configs are located in `configs/` to preserve the structure recommended by authors. 
