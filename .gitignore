@@ -133,5 +133,5 @@ dmypy.json
 .pyre/
 
 #tex
-/tex/main.pdf
-/tex/main.synctex.gz
+tex/main.pdf
+tex/main.synctex.gz
