@@ -35,4 +35,9 @@ Minimal required steps to run the training pipeline:
 
 In this section we present a deeper explanation of the code structure:
 
-* 
+* `configs/` -- `hydra` configuration files, one for each step of training pipeline (e.g. dataset, model, optimizer, scheduler, etc.). Refer to [hydra documentation](https://hydra.cc/docs/intro/) for better understanding of overall structure
+* `src/data/` -- directory with dataset-based classes. This includes dataset class (`dataset.py`), augmentations (`transforms.py`) and other utility functions (`dataset_utils.py`). To have a rich set of augmentations, we use [albumentations](https://albumentations.ai/)
+* `src/losses.py` -- loss functions used for training the alignment model
+* `src/modules.py` -- contains implementation of our neural network. To obtain pretrained SotA neural networks we use [timm](https://github.com/huggingface/pytorch-image-models) repository
+* `src/models.py` -- `pytorch-lightning` wrapper around our model
+* `src/train.py` -- main function that collects all the configurations, initializes all modules and runs training
