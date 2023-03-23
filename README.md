@@ -22,3 +22,8 @@ conda env create -f environment.yml
 ## Repository structure
 
 Evaluation of the model is issued in the form of pretty self-explanatory single jupyter notebook `Alignment (Evaluation).ipynb`. For convenience, some of the results will be presented further. Auxilary source code is moved to `.py` modules (`src/`), `hydra` configs are located in `configs/` to preserve the structure recommended by authors. 
+
+### Training
+
+Minimal required steps to run the training pipeline:
+
