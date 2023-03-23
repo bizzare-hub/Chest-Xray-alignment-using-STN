@@ -1,0 +1,18 @@
+defaults:
+  - _self_
+  - data: nih
+  - model: resnet_vgg
+  - loss: perceptual
+  - optimizer: adamw
+  - lr_scheduler: linear
+
+experiment_path: /home/orogov/smbmount/a_galichin/experiments/alignment
+experiment_name: nih_resnet18_densenet121_320x320_perceptual_bs16
+
+trainer:
+  devices:
+    - 0
+    - 1
+  strategy: ddp
+  precision: 32
+  max_epochs: 3

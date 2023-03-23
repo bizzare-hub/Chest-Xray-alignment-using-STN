@@ -1,0 +1,37 @@
+dataset:
+  _target_: src.data.dataset.ChestXRayAlignmentDataset
+  main_dir: /home/orogov/smbmount/from_DGX/cxr14-2
+  transforms:
+    - _target_: albumentations.Resize
+      height: 320
+      width: 320
+      always_apply: True
+    - _target_: albumentations.RandomBrightnessContrast
+      p: 0.5
+    - _target_: albumentations.RandomRotate90
+      p: 0.25
+    - _target_: albumentations.ShiftScaleRotate
+      scale_limit: 0.05
+      rotate_limit: 10
+      border_mode: 0
+      p: 1.0
+    - _target_: src.data.transforms.GrayToRGB
+    - _target_: albumentations.Normalize
+      max_pixel_value: 1.0
+      always_apply: True
+    - _target_: albumentations.pytorch.ToTensorV2
+  anchor_transforms:
+    - _target_: albumentations.Resize
+      height: 320
+      width: 256
+      always_apply: True
+    - _target_: src.data.transforms.GrayToRGB
+    - _target_: albumentations.Normalize
+      max_pixel_value: 1.0
+      always_apply: True
+    - _target_: albumentations.pytorch.ToTensorV2
+  anchor: canonical_chest
+
+loader:
+  batch_size: 8
+  num_workers: 8

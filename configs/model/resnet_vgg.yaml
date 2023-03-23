@@ -1,0 +1,14 @@
+module:
+  _target_: src.modules.AlignmentModel
+  backbone: resnet18
+  loss_network: densenet121
+  grid_shape: [3, 320, 256]
+  backbone_kwargs:
+    pretrained: True
+    global_pool: 'avg'
+    num_classes: 0
+    drop_rate: 0.1
+  loss_network_kwargs:
+    # pretrained: True
+    checkpoint_path: /home/orogov/smbmount/a_galichin/experiments/xvision/checkpoints/V1_nih14_densenet121_320x320_mbce_bs64/epoch=5-val_loss=0.205.ckpt
+  
