@@ -83,7 +83,7 @@ We provide evaluation of the improvement of quality for such
  \href{https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14}{downstream task}
  as classification of fourteen diseases in ChestX-ray14 dataset.
 
-\begin{figure}[ht]\label{icml-historical}
+\begin{figure}[ht]\label{initial_images}
     \vskip 0.2in
     \begin{center}
     \centerline{\includegraphics[width=\columnwidth]{../images/initial_images.png}}
@@ -119,6 +119,39 @@ approaches they used for solving their project's problem. Students should
 explain the motivation for choosing the models, possible benefits and drawbacks 
 of the choice in application to their problem. The used metrics for accessing 
 the quality of the results should also be described."
+
+As we have already said, our goal is to achieve the perfect alignment of the input 
+ Chest X-ray image by regressing the corresponding affine transform parameters. To 
+ correctly obtain them, we build the network on the idea of spatial transformer 
+ block, first introduced in \cite{SpatialTransform}. The idea is to use a simple 
+ localization network consisting of several linear layers to regress the affine 
+ matrix parameters, and then apply a warping transform to the initial image to 
+ obtain its aligned variant.
+Because in our formulation we do not have a training dataset for supervised 
+ learning, we follow the idea stated in \cite{XRayDiagnosis}. Specifically, we 
+ align all the images to a single target image, which we call ``Canonical chest''. 
+ To obtain it, we randomly sample 1000 images from ChestX-ray14 dataset and 
+ average them. After that, we also crop out the central view tightly bounding the 
+ two lungs.
+ 
+\begin{figure}[ht]\label{canonical_chest}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth/2]{../images/canonical_chest.png}}
+    \caption{Canonical chest representation}
+    \end{center}
+    \vskip -0.2in
+\end{figure}
+
+\subsubsection{Alignment module}
+After obtaining the canonical chest as the target image, we frame the transformation
+learning as minimizing the structure divergence between the transformed image and
+the target image. Let $ I $ and $ T $ denote the transformed input image and the 
+target image respectively. Given $ I $, and the alignment network $ \phi_A $ we 
+obtain the transformed image $ \phi_A(I) $. To let $ \phi_A(I) $ have desired 
+structure, we minimize the structure loss 
+$$ L_s = f(\phi_A(I), T). $$
+Specifically, we use a light-weighted ResNet18 as the backbone of $\phi_A$.
 
 \subsection{The dataset}
 For training and evaluation we use ChestX-ray14 dataset \cite{DataSet}, which 
