@@ -97,22 +97,82 @@ We provide evaluation of the improvement of quality for such
  for solving the problem students encounter in their project. At least 4-5 references should be mentioned with a brief discussion of their drawbacks and advantages. We refer to \cite{DataSet}, \cite{XRayDiagnosis}, \cite{SpatialTransform}, \cite{StyleTransfer}
 
 \section{Algorithms and Models}\label{algorithms_and_models}
+Short summary of our goals, project plan and decision been made. GitHub link.
 
-\underline{\textbf{Algorithms and Models}} and \underline{\textbf{Experiments and Results.}}
+From the guideline:
+"\underline{\textbf{Algorithms and Models}} and 
+\underline{\textbf{Experiments and Results.}} All the relevant content should 
+be distributed among these sections based on the topic of project, stated 
+goals, project plan and students' decision. In general, these sections should 
+contain clear experimental setup and a  link to a \textbf{github repo} (again!) 
+with a fully reproducible code. 
+\textbf{Projects without a github repo with a reproducible code will be graded as zero.}
 
-Two main sections describing key students' results. All the relevant content should be distributed among these sections based on the topic of project, stated goals, project plan and students' decision. In general, these sections should contain clear experimental setup and a  link to a \textbf{github repo} (again!) with a fully reproducible code. \textbf{Projects without a github repo with a reproducible code will be graded as zero.}
+\subsection{The architecture}
+The architecture and overall approach we use.
 
-Students have to explicitly describe the algorithms, models, methods, approaches they used for solving their project's problem. Students should explain the motivation for choosing the models, possible benefits and drawbacks of the choice in application to their problem. The used metrics for accessing the quality of the results should also be described.
+From the guideline:
+"Students have to explicitly describe the algorithms, models, methods, 
+approaches they used for solving their project's problem. Students should 
+explain the motivation for choosing the models, possible benefits and drawbacks 
+of the choice in application to their problem. The used metrics for accessing 
+the quality of the results should also be described."
 
-The section(s) must contain a \textbf{complete description of the datasets} used for experiments with all the required download links. This includes number of features, samples, types of features (categorial, real, pixels, etc.), description of key features, etc. If well-known datasets are used, e.g. MNIST, CIFAR, etc., it is enough to put a link to a dataset (or related paper) without a detailed description.
+\subsection{The dataset}
+For training and evaluation we use ChestX-ray14 dataset \cite{DataSet}, which 
+contains 112120 chest X-ray images of 30805 unique patients. Each radiography 
+is labeled with one or multiple types of 14 diseases: Atelectasis, 
+Cardiomegaly, Effusion, Infiltration, Mass, Nodule, Pneumonia, Pneumothorax, 
+Consolidation, Edema, Emphysema, Fibrosis, Pleural Thickening and Hernia. 
+Original images are stored in grayscale format and have size 1024x1024. 
 
-All the \textbf{preprocessing} and data-handling steps should be presented in these sections. Make sure to answer relevant questions, e.g. the following ones: How data was normalized? How data augmentation was done? How data was cleaned from outliers or anomalies? How the data was splitted for train, test, validation?
+\subsection{Preprocessing}
+To train our alignment network, we don't need the actual labels, but only Chest 
+X-rays, so we omit them during our dataset pipeline construction.
 
-All \textbf{training parameters} should be listed. Which methods did you try and with which parameters (e.g. neural network architectures, weight initialization, optimizers, optimizer parameters, number of epochs, iterations, cross validation, exact number of restarts, etc.)?
+Our pipeline contains ResNet18 and VGG16 networks pretrained on on the ImageNet 
+dataset \cite{ImageNet} and expect (3, 320, 320) data as input. Therefore, we 
+shrink the original image of size 1024x1024 to be of size 320x320 and convert 
+single channel X-ray images into 3-channel RGB images by simple tiling of the 
+channel axis.
+
+During preprocessing, we normalize the image by scaling it to [0; 1] range. As 
+for augmentations, we randomly shift, scale rotate the image by maximum value 
+of 10 degrees to enrich the disalignment variations in our dataset. Also 
+standard color augmentations such as brightness and contrast are applied. 
+Finally, we normalize image by mean and std from ImageNet dataset.
+
+As visually satisfactory results on the whole dataset would already may be 
+considered as a success, and moreover any quantitative evaluations of the 
+results are questionable, we haven't performed any splitting of our dataset, 
+limiting our validation to online evaluation of the transformed images during 
+training. We visualize 1 random result of our model work once every 100 steps.
+
+\subsection{Training process}
+Methods we try, parameters we train, optimizers we use, and all the other staff 
+related to the training process.
+
+From the guideline:
+"All \textbf{training parameters} should be listed. Which methods did you try 
+and with which parameters (e.g. neural network architectures, weight 
+initialization, optimizers, optimizer parameters, number of epochs, iterations, 
+cross validation, exact number of restarts, etc.)?"
 
 \section{Experiments and Results}\label{experiments_and_results}
 
-We highly encourage students to additionally present experimental results in a form of \textbf{tables and plots} (e.g. generated images for projects related to image generation, segmented images for project related to segmentation, table with scores for projects related to prediction, etc.). All the experimental results must be properly discussed and explained. If you experience problems with creating tables in \LaTeX, use e.g. \href{https://www.tablesgenerator.com}{this online tool} or any its analog. In Python's \textit{Pandas} library there are also methods to convert \href{https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_latex.html}{\textbf{pd.DataFrame}} to \LaTeX  .
+The experiments we performed and the results we achieved.
+
+From the guideline: 
+"We highly encourage students to additionally present experimental results in a 
+form of \textbf{tables and plots} (e.g. generated images for projects related 
+to image generation, segmented images for project related to segmentation, 
+table with scores for projects related to prediction, etc.). All the 
+experimental results must be properly discussed and explained. If you 
+experience problems with creating tables in \LaTeX, use e.g. 
+\href{https://www.tablesgenerator.com}{this online tool} or any its analog. In 
+Python's \textit{Pandas} library there are also methods to convert 
+\href{https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_latex.html}{\textbf{pd.DataFrame}} 
+to \LaTeX."
 
 \section{Conclusion}\label{conclusion}
 
@@ -134,11 +194,11 @@ As future work, we plan to explore the integration of additional deep learning t
 \appendix
 \section{Team member's contributions}
 \label{appendix-contrib}
-Explicitly stated contributions of each team member to the final project.
+
 \subsection*{Andrey Galichin (60\% of work)}
 \begin{itemize}
-    \item Reviewing literate on the topic (3 papers)
-    \item Coding the main pipelinr
+    \item Reviewing literature on the topic
+    \item Coding the main pipeline
     \item GitHub Repo Support
 \end{itemize}
 
@@ -146,34 +206,32 @@ Explicitly stated contributions of each team member to the final project.
 \begin{itemize}
     \item Performing experiments
     \item Presentation design
-    \item Report
+    \item Writing the report
 \end{itemize}
 
 \subsection*{Arkadiy Vladimirov (20\% of work)}
 \begin{itemize}
     \item Performing experiments
     \item Presentation design
-    \item Report
+    \item Writing the report
 \end{itemize}
 
-\clearpage
+\newpage
 \section{Reproducibility checklist}
 \label{appendix-checklist}
-Answer the questions of following reproducibility checklist. If necessary, you may leave a comment.
+
     \begin{enumerate}
     \item A ready code was used in this project, e.g. for replication project the code from the corresponding paper was used.
     \begin{itemize}
-        \item [\faCheckSquareO] Yes.
-        \item [\faSquareO] No.
+        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
-    
-    \textbf{General comment:} If the answer is \textbf{yes}, students must \underline{explicitly clarify} to which extent (e.g. which percentage of your code did you write on your own?) and which code was used.
     
     \textbf{Students' comment:} None
     \item A clear description of the mathematical setting, algorithm, and/or model is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -182,7 +240,7 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     
     \item A link to a downloadable source code, with specification of all dependencies, including external libraries is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -191,7 +249,7 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     
     \item A complete description of the data collection process, including sample size, is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -201,15 +259,15 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     \item A link to a downloadable version of the dataset or simulation environment is included in the report.
     \begin{itemize}
         \item [\faSquareO] Yes.
-        \item [\faSquareO] No.
+        \item [\faCheckSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
     
-    \textbf{Students' comment:} None
+    \textbf{Students' comment:} A reference to the article \cite{DataSet} about the dataset itself with a link to it is provided instead.
     
     \item An explanation of any data that were excluded, description of any pre-processing step are included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -218,7 +276,7 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     
     \item An explanation of how samples were allocated for training, validation and testing is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
