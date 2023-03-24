@@ -60,4 +60,4 @@ The results on all 14 classes are shown in the following tables, metric is **AUR
 
 From the results we can see that our alignment module does improve the classification model results on 8 out of 14 diseases.
 
-**Note:** This project is closely related with the work *Andrey Galichin* does as part of his job at the company, which also includes all the classification training pipeline. Hence, due to some obvious restrictions, we can't share it to the public.
+**Note:** This project is closely related with the work *Andrey Galichin* does as part of his job at the company, and it also includes all the classification training pipeline. Hence, due to some obvious restrictions, we can't share it to the public.
