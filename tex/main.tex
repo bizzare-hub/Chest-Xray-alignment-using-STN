@@ -202,7 +202,7 @@ First, we take as input a chest X-ray image, which is passed threw our alignment
 model, which consists of ResNet18 and STN block. From it, we obtain affine transform 
 parameters, which we use to warp the initial image and obtain its aligned variant. 
 Then, we use pretrained feature extractor (VGG16) to obtain the features maps to 
-calculate $L_{\text{feat}}$ and also calculate consistency loss.
+calculate $L_{\text{feat}}$ and $ L_{\text{pixel}} $.
 
 \begin{figure*}[ht]\label{overall_architecture}
     \vskip 0.2in
@@ -255,19 +255,43 @@ required 1.5h to train the model.
 
 \section{Experiments and Results}\label{experiments_and_results}
 
-The experiments we performed and the results we achieved.
+\subsection{Visualizations}
 
-From the guideline: 
-"We highly encourage students to additionally present experimental results in a 
-form of \textbf{tables and plots} (e.g. generated images for projects related 
-to image generation, segmented images for project related to segmentation, 
-table with scores for projects related to prediction, etc.). All the 
-experimental results must be properly discussed and explained. If you 
-experience problems with creating tables in \LaTeX, use e.g. 
-\href{https://www.tablesgenerator.com}{this online tool} or any its analog. In 
-Python's \textit{Pandas} library there are also methods to convert 
-\href{https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_latex.html}{\textbf{pd.DataFrame}} 
-to \LaTeX."
+Here we present some examples of our Alignment network on ChestX-ray14 dataset 
+ (``Initial'' is an input chest, ``Aligned'' is the aligned version outputted by our model):
+
+\subsection{Classification}
+
+
+In addition to the visualizations, we also evaluated our model performance 
+on downstream \href{https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14}{classification task}. 
+Specifically, we constructed a standard training pipeline following CheXNet 
+paper and performed 2 experiments on different datasets: standard Chest X-ray14 
+and it's aligned version, created using our alignment model.
+
+The results on all 14 classes are shown in the following tables, metric is 
+ROC AUC (Receiver Operating Charachteristic Area Under Curve):
+
+\begin{figure*}[ht]\label{classification}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth * 2]{../images/classification.png}}
+    \caption{Classification ROC AUC}
+    \end{center}
+    \vskip -0.2in
+\end{figure*}
+
+\begin{figure}[ht]\label{visualization}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth]{../images/alignment_results.png}}
+    \caption{Alignment results visualization}
+    \end{center}
+    \vskip -0.2in
+\end{figure}
+
+From the results we can see that our alignment module does improve the classification 
+ model results on 8 out of 14 diseases.
 
 \section{Conclusion}\label{conclusion}
 
