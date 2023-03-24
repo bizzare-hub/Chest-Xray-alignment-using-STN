@@ -43,7 +43,11 @@
 % \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 \begin{abstract}
 
-In this project we try to solve the problem of unsupervised chest X-Ray images alignment. We believe that proper alignment of medical images may improve accuracy of diseases classification. To solve this problem we use Style Transfer approach in combination with Spatial Transformer Network achitecture, which shows quite satisfactory results. \textbf{(Specify key results)}
+In this project we try to solve the problem of unsupervised chest X-Ray images
+ alignment. We believe that proper alignment of medical images may improve accuracy
+ of diseases classification. To solve this problem we use Style Transfer approach
+ in combination with Spatial Transformer Network achitecture, which shows quite
+ satisfactory results.
 
 \end{abstract}
 
@@ -51,23 +55,45 @@ In this project we try to solve the problem of unsupervised chest X-Ray images a
 
 \section{Introduction}\label{introduction}
 
-\underline{\textbf{Introduction.}} A gentle introduction to the topic of your report, deeper explanation of motivation (mentioning some recent related work on your topic). The introduction must end with the phrase \textbf{the main contributions of this report are as follows} and following concise but still very clear list of 2-4 tasks, problems, improvements, replications, experiments (listed as bullet points) that you performed in your project. This is a usual practice to make the contributions explicit to readers and reviewers.
+Chest X-ray imaging is a widely used diagnostic tool for the detection and 
+ monitoring of various medical conditions, including pneumonia, tuberculosis, 
+ lung cancer etc. The accurate analysis and comparison of chest X-ray images 
+ can be challenging due to inconsistencies in the image orientation, scale, 
+ and position. These misalignments can adversely affect the performance of 
+ downstream tasks such as disease classification, segmentation, and other 
+ computer-aided diagnosis systems. In recent years, there has been a growing 
+ interest in developing machine learning-based techniques to preprocess and 
+ align chest X-ray images for improved diagnostic performance.
 
-Chest X-ray imaging is a widely used diagnostic tool for the detection and monitoring of various medical conditions, including pneumonia, tuberculosis, and lung cancer. The accurate analysis and comparison of chest X-ray images can be challenging due to inconsistencies in the image orientation, scale, and position. These misalignments can adversely affect the performance of downstream tasks such as disease classification, segmentation, and other computer-aided diagnosis systems. In recent years, there has been a growing interest in developing machine learning-based techniques to preprocess and align chest X-ray images for improved diagnostic performance (Wang et al., 2018; Rajpurkar et al., 2018).
-
-In this work, we propose a novel preprocessing framework that leverages a neural network architecture combining a ResNet18 encoder and a Spatial Transformer block for automatic alignment of chest X-ray images. Our approach addresses the limitations of traditional image alignment methods and can adapt to complex transformations and variations in the dataset. By providing more accurately aligned images for analysis, our method significantly enhances the performance of downstream tasks in chest X-ray image analysis.
+In this work, we implement a novel preprocessing framework that leverages a 
+ neural network architecture combining a ResNet18 encoder and a Spatial 
+ Transformer block for automatic alignment of chest X-ray images. Due to the 
+ absence of labeled data we use consistency loss, first introduced in Style 
+ Transfer approach, for training this architecture in unsupervised manner.
 
 The main contributions of this report are as follows:
 
-We propose a novel preprocessing framework for automatic alignment of chest X-ray images, designed to improve the performance of downstream tasks such as disease classification, segmentation, and others.
-We introduce a neural network architecture that combines a ResNet18 encoder and a Spatial Transformer block for efficient and robust alignment of chest X-ray images.
-We demonstrate the effectiveness of our method through extensive experiments on a large dataset of chest X-ray images, showing significant improvements in the performance of downstream tasks when using our aligned images.
-We provide a comprehensive comparison of our approach with traditional image alignment techniques, highlighting the advantages of our method in terms of adaptability to complex transformations and variations in the dataset.
-By addressing the alignment challenges in chest X-ray image analysis, our work has the potential to significantly impact clinical practice by enhancing the diagnostic utility of these images.
+We implement a novel preprocessing framework for automatic alignment of chest
+ X-ray images, which consists of a neural network architecture that combines 
+ a ResNet18 encoder with a Spatial Transformer block and consistency loss. 
+We properly tune the parameters of the algorithm to achieve good performance
+ and prevent divergence.
+We provide evaluation of the improvement of quality for such downstream task
+ as classification of fourteen diseases in ChestX-ray14 dataset.
+
+\begin{figure}[ht]\label{icml-historical}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth]{../images/initial_images.png}}
+    \caption{Examples of not aligned images in ChestX-ray14}
+    \end{center}
+    \vskip -0.2in
+\end{figure}
 
 \section{Related work}\label{related_work}
 
-\underline{\textbf{Related work}} Review of old, recent and state-of-the art methods for solving the problem students encounter in their project. At least 4-5 references should be mentioned with a brief discussion of their drawbacks and advantages. We refer to \cite{DataSet}, \cite{XRayDiagnosis}, \cite{SpatialTransform}, \cite{StyleTransfer}
+\underline{\textbf{Related work}} Review of old, recent and state-of-the art methods
+ for solving the problem students encounter in their project. At least 4-5 references should be mentioned with a brief discussion of their drawbacks and advantages. We refer to \cite{DataSet}, \cite{XRayDiagnosis}, \cite{SpatialTransform}, \cite{StyleTransfer}
 
 \section{Algorithms and Models}\label{algorithms_and_models}
 
