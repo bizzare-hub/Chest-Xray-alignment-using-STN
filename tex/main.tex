@@ -112,14 +112,6 @@ Full and reproducible code for the pipeline described below may be
 found at \href{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN.git}{the project's repo}.
 
 \subsection{The architecture}
-The architecture and overall approach we use.
-
-From the guideline:
-"Students have to explicitly describe the algorithms, models, methods, 
-approaches they used for solving their project's problem. Students should 
-explain the motivation for choosing the models, possible benefits and drawbacks 
-of the choice in application to their problem. The used metrics for accessing 
-the quality of the results should also be described."
 
 As we have already said, our goal is to achieve the perfect alignment of the input 
  Chest X-ray image by regressing the corresponding affine transform parameters. To 
@@ -206,17 +198,17 @@ The final loss is a combination of two loss functions, where $ \lambda $ is a we
 
 \subsubsection{Overall architecture}
 
-So, the overall architecture is presented in the following figure.
+First, we take as input a chest X-ray image, which is passed threw our alignment 
+model, which consists of ResNet18 and STN block. From it, we obtain affine transform 
+parameters, which we use to warp the initial image and obtain its aligned variant. 
+Then, we use pretrained feature extractor (VGG16) to obtain the features maps to 
+calculate $L_{\text{feat}}$ and also calculate consistency loss.
 
 \begin{figure*}[ht]\label{overall_architecture}
     \vskip 0.2in
     \begin{center}
     \centerline{\includegraphics[width=\columnwidth * 2]{../images/overall_pipeline.png}}
-    \caption{First, we take as input a chest X-ray image, which is passed threw our alignment 
-     model, which consists of ResNet18 and STN block. From it, we obtain affine transform 
-     parameters, which we use to warp the initial image and obtain its aligned variant. 
-     Then, we use pretrained feature extractor (VGG16) to obtain the features maps to 
-     calculate $L_{\text{feat}}$ and also calculate consistency loss.}
+    \caption{Training pipeline}
     \end{center}
     \vskip -0.2in
 \end{figure*}
