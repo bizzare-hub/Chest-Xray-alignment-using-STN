@@ -98,16 +98,8 @@ We provide evaluation of the improvement of quality for such
  for solving the problem students encounter in their project. At least 4-5 references should be mentioned with a brief discussion of their drawbacks and advantages. We refer to \cite{DataSet}, \cite{XRayDiagnosis}, \cite{SpatialTransform}, \cite{StyleTransfer}
 
 \section{Algorithms and Models}\label{algorithms_and_models}
-Couple of introductory words and GitHub link.
-
-From the guideline:
-"\underline{\textbf{Algorithms and Models}} and 
-\underline{\textbf{Experiments and Results.}} All the relevant content should 
-be distributed among these sections based on the topic of project, stated 
-goals, project plan and students' decision. In general, these sections should 
-contain clear experimental setup and a  link to a \textbf{github repo} (again!) 
-with a fully reproducible code. 
-\textbf{Projects without a github repo with a reproducible code will be graded as zero.}
+Full and reproducible code for the pipeline described below may be 
+found at \href{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN.git}{the project's repo}.
 
 \subsection{The architecture}
 The architecture and overall approach we use.
@@ -150,14 +142,14 @@ limiting our validation to online evaluation of the transformed images during
 training. We visualize 1 random result of our model work once every 100 steps.
 
 \subsection{Training process}
-Methods we try, parameters we train, optimizers we use, and all the other staff 
-related to the training process.
-
-From the guideline:
-"All \textbf{training parameters} should be listed. Which methods did you try 
-and with which parameters (e.g. neural network architectures, weight 
-initialization, optimizers, optimizer parameters, number of epochs, iterations, 
-cross validation, exact number of restarts, etc.)?"
+The weights of the networks are initialized with weights pretrained on ImageNet. 
+The weight of reconstruction loss is set to 20. The end-to-end model is trained 
+by AdamW optimizer with standard parameters. We set the batch size 8, initial 
+learning rate 1e-4 and weight decay 1e-4. The learning rate starts from 1e-4 
+and decreases linearly to 1e-6 at the end of learning process. The training 
+procedure is done in 5 epochs in total. One epoch takes approx. 7000 
+forward-backward steps. With our setup (2 Nvidia Geforce GTX 1080 TI, 11gb) it 
+required 1.5h to train the model.
 
 \section{Experiments and Results}\label{experiments_and_results}
 
@@ -287,18 +279,20 @@ As future work, we plan to explore the integration of additional deep learning t
     \item The range of hyper-parameters considered, method to select the best hyper-parameter
 configuration, and specification of all hyper-parameters used to generate results are included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
     
-    \textbf{Students' comment:} None
+    \textbf{Students' comment:} Due to the complexity of the model and the 
+    amount of data automatic search for the best hyper-parameter configuration 
+    is not quite applicable.
     
     \item The exact number of evaluation runs is included.
     \begin{itemize}
         \item [\faSquareO] Yes.
         \item [\faSquareO] No.
-        \item [\faSquareO] Not applicable.
+        \item [\faCheckSquareO] Not applicable.
     \end{itemize}
     
     \textbf{Students' comment:} None
@@ -332,7 +326,7 @@ configuration, and specification of all hyper-parameters used to generate result
     
     \item A description of the computing infrastructure used is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
