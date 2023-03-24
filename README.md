@@ -55,3 +55,5 @@ Here we present some examples of our **Alignment network** on *Chest X-ray14* da
 In addition to the visualizations, we also evaluated our model performance on downstream [classification task](https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14). Specifically, we constructed a standard training pipeline following [CheXNet](https://arxiv.org/pdf/1711.05225v3.pdf) paper and performed 2 experiments on different datasets: standard *Chest X-ray14* and it's aligned version, created using our alignment model.
 
 The results on all 14 classes are shown in the following tables, metric is **AUROC** (Area Under Receiver Operating Curve):
+
+<p align="center"><img src="images/classification.png" width="450" /></p>
