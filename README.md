@@ -58,4 +58,4 @@ The results on all 14 classes are shown in the following tables, metric is **AUR
 
 <p align="center"><img src="images/classification.png" width="700" /></p>
 
-From the results we can see that our alignment module does improve the classification model
+From the results we can see that our alignment module does improve the classification model results on 8 out of 14 diseases.
