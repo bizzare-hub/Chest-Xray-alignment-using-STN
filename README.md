@@ -56,4 +56,6 @@ In addition to the visualizations, we also evaluated our model performance on do
 
 The results on all 14 classes are shown in the following tables, metric is **AUROC** (Area Under Receiver Operating Curve):
 
-<p align="center"><img src="images/classification.png" width="600" /></p>
+<p align="center"><img src="images/classification.png" width="700" /></p>
+
+From the results we can see that our alignment module does improve the classification model
