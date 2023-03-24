@@ -132,7 +132,7 @@ Original images are stored in grayscale format and have size 1024x1024.
 To train our alignment network, we don't need the actual labels, but only Chest 
 X-rays, so we omit them during our dataset pipeline construction.
 
-Our pipeline contains ResNet18 and VGG16 networks pretrained on on the ImageNet 
+Our pipeline contains ResNet18 and VGG16 networks pretrained on the ImageNet 
 dataset \cite{ImageNet} and expect (3, 320, 320) data as input. Therefore, we 
 shrink the original image of size 1024x1024 to be of size 320x320 and convert 
 single channel X-ray images into 3-channel RGB images by simple tiling of the 
