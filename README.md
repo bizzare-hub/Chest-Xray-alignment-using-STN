@@ -44,6 +44,14 @@ In this section we present a deeper explanation of the code structure:
 
 ## Results
 
-Examples of our **Alignment network** on *Chest X-ray14* dataset (**Initial** is an input chest, **Aligned** is the aligned version outputted by our model):
+### Visualizations
+
+Here we present some examples of our **Alignment network** on *Chest X-ray14* dataset (**Initial** is an input chest, **Aligned** is the aligned version outputted by our model):
 
 <p align="center"><img src="images/alignment_results.png" width="600" /></p>
+
+### Classification
+
+In addition to the visualizations, we also evaluated our model performance on downstream [classification task](https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14). Specifically, we constructed a standard training pipeline following [CheXNet](https://arxiv.org/pdf/1711.05225v3.pdf) paper and performed 2 experiments on different datasets: standard *Chest X-ray14* and it's aligned version, created using our alignment model.
+
+The results on all 14 classes are shown in the following tables, metric is **AUROC** (Area Under Receiver Operating Curve):
