@@ -94,8 +94,16 @@ We provide evaluation of the improvement of quality for such
 
 \section{Related work}\label{related_work}
 
-\underline{\textbf{Related work}} Review of old, recent and state-of-the art methods
- for solving the problem students encounter in their project. At least 4-5 references should be mentioned with a brief discussion of their drawbacks and advantages. We refer to \cite{DataSet}, \cite{XRayDiagnosis}, \cite{SpatialTransform}, \cite{StyleTransfer}
+At the moment, the approach we have taken as a basis from the article \cite{XRayDiagnosis}
+ in fact has no analogues. As an alternative scheme, in theory it is 
+ possible to apply all kinds of affine transforms as augmentations of the dataset, 
+ in order to make the model which solves the downstream problem invariant to such 
+ transformations. Nevertheless, we tend to believe that the approach we have chosen 
+ is more universal and can show better results. Furthermore, the method we have 
+ chosen is able to crop the edges of images that do not contain X-rays, which 
+ increases the information content of each individual image.
+
+ We also refer to \cite{DataSet}, \cite{SpatialTransform}, \cite{StyleTransfer}
 
 \section{Algorithms and Models}\label{algorithms_and_models}
 Couple of introductory words and GitHub link.
