@@ -101,9 +101,10 @@ At the moment, the approach we have taken as a basis from the article \cite{XRay
  transformations. Nevertheless, we tend to believe that the approach we have chosen 
  is more universal and can show better results. Furthermore, the method we have 
  chosen is able to crop the edges of images that do not contain X-rays, which 
- increases the information content of each individual image.
-
- We also refer to \cite{DataSet}, \cite{SpatialTransform}, \cite{StyleTransfer}
+ increases the information content of each individual image. The basis of our 
+ method is the Spatial Transformer architecture described in \cite{SpatialTransform}. 
+ Training with this approach is based on the concept of Style Transfer \cite{StyleTransfer} and 
+ the final pipeline is essentially a combination of these two ideas.
 
 \section{Algorithms and Models}\label{algorithms_and_models}
 Full and reproducible code for the pipeline described below may be 
