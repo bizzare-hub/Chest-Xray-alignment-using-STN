@@ -269,6 +269,17 @@ Specifically, we constructed a standard training pipeline following CheXNet
 paper \cite{CheXNet} and performed 2 experiments on different datasets: standard Chest X-ray14 
 and it's aligned version, created using our alignment model.
 
+To train and test our models we use a public data split: 86524 and 25596 chest 
+X-ray images for training and evaluation purposes. Data split is performed on 
+patient level, which means all patient images are located only in one of the 
+splits.
+
+We formulate the Chest X-ray disease recognition as multi-label classification 
+problem. Our network outputs a 14-dimensional vector indicating a positive 
+probability for each kind of listed diseases. As an objective we use standard 
+binary cross entropy loss, calculated for each class separately and averaged 
+after t produce a single scalar.
+
 The results on all 14 classes are shown in the following tables, metric is 
 ROC AUC (Receiver Operating Charachteristic Area Under Curve):
 
