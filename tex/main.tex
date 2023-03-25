@@ -270,16 +270,27 @@ Python's \textit{Pandas} library there are also methods to convert
 to \LaTeX."
 
 \section{Conclusion}\label{conclusion}
+In this paper, we have presented a novel preprocessing framework for automatic 
+alignment of chest X-ray images, aimed at improving the performance of 
+downstream tasks such as disease classification, segmentation, and others. Our 
+approach leverages a neural network architecture that combines a ResNet18 
+encoder and a Spatial Transformer block, enabling efficient and robust 
+alignment of input images.
 
-\underline{\textbf{Conclusion}} Concise description of experimental results and outcomes, including possible directions for further work.
+The results of experiments we have conducted show visually pleasing and 
+promising results, providing satisfactory grounds for future development of the 
+method, which, compared to classical augmentation, offers several advantages
+including adaptability to complex transformations, data compression and 
+absorbing computational costs of learning variously transformed data that 
+allows potentional reduce of classification models complexity, making it a 
+valuable preprocessing tool.
 
-Conclusion:
-
-In this paper, we have presented a novel preprocessing framework for automatic alignment of chest X-ray images, aimed at improving the performance of downstream tasks such as disease classification, segmentation, and others. Our approach leverages a neural network architecture that combines a ResNet18 encoder and a Spatial Transformer block, enabling efficient and robust alignment of input images.
-
-Through extensive experiments on a large dataset of chest X-ray images, we demonstrated the effectiveness of our method in enhancing the performance of downstream tasks, outperforming traditional image alignment techniques. Our approach offers several advantages, including adaptability to complex transformations and variations in the dataset, making it a valuable preprocessing tool for chest X-ray image analysis in clinical practice.
-
-As future work, we plan to explore the integration of additional deep learning techniques to further improve the alignment process and investigate the applicability of our framework to other medical imaging modalities. Additionally, we aim to develop end-to-end models that combine image alignment and downstream tasks in a single architecture to further optimize performance and streamline the diagnostic process.
+As future work, we plan to explore the integration of additional deep learning 
+techniques to further improve the alignment process and investigate the 
+applicability of our framework to other medical imaging modalities. 
+Additionally, we aim to develop end-to-end models that combine image alignment 
+and downstream tasks in a single architecture to further optimize performance 
+and streamline the diagnostic process.
 
 \bibliography{references}
 \bibliographystyle{icml2020}
