@@ -8,6 +8,7 @@
 \usepackage{fontawesome}
 \usepackage{hyperref}
 \usepackage{url}
+\usepackage{amsmath}
 
 % Attempt to make hyperref and algorithmic work together better:
 \newcommand{\theHalgorithm}{\arabic{algorithm}}
@@ -43,61 +44,310 @@
 % \printAffiliationsAndNotice{\icmlEqualContribution} % otherwise use the standard text.
 \begin{abstract}
 
-In this project we try to solve the problem of unsupervised chest X-Ray images alignment. We believe that proper alignment of medical images may improve accuracy of diseases classification. To solve this problem we use Style Transfer approach in combination with Spatial Transformer Network achitecture, which shows quite satisfactory results. \textbf{(Specify key results)}
+In this project we try to solve the problem of unsupervised chest X-Ray images
+ alignment. We believe that proper alignment of medical images may improve accuracy
+ of diseases classification. To solve this problem we use Style Transfer approach
+ in combination with Spatial Transformer Network achitecture, which shows quite
+ satisfactory results.
 
 \end{abstract}
 
 \underline{\textbf{Github repo:}} \href{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN.git}{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN.git}\newline
+\underline{\textbf{Presentation:}} \href{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN/blob/main/presentation.pdf}{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN/blob/main/presentation.pdf}
 
 \section{Introduction}\label{introduction}
 
-\underline{\textbf{Introduction.}} A gentle introduction to the topic of your report, deeper explanation of motivation (mentioning some recent related work on your topic). The introduction must end with the phrase \textbf{the main contributions of this report are as follows} and following concise but still very clear list of 2-4 tasks, problems, improvements, replications, experiments (listed as bullet points) that you performed in your project. This is a usual practice to make the contributions explicit to readers and reviewers.
+Chest X-ray imaging is a widely used diagnostic tool for the detection and 
+ monitoring of various medical conditions, including pneumonia, tuberculosis, 
+ lung cancer etc. The accurate analysis and comparison of chest X-ray images 
+ can be challenging due to inconsistencies in the image orientation, scale, 
+ and position. These misalignments can adversely affect the performance of 
+ downstream tasks such as disease classification, segmentation, and other 
+ computer-aided diagnosis systems. In recent years, there has been a growing 
+ interest in developing machine learning-based techniques to preprocess and 
+ align chest X-ray images for improved diagnostic performance.
 
-Chest X-ray imaging is a widely used diagnostic tool for the detection and monitoring of various medical conditions, including pneumonia, tuberculosis, and lung cancer. The accurate analysis and comparison of chest X-ray images can be challenging due to inconsistencies in the image orientation, scale, and position. These misalignments can adversely affect the performance of downstream tasks such as disease classification, segmentation, and other computer-aided diagnosis systems. In recent years, there has been a growing interest in developing machine learning-based techniques to preprocess and align chest X-ray images for improved diagnostic performance (Wang et al., 2018; Rajpurkar et al., 2018).
-
-In this work, we propose a novel preprocessing framework that leverages a neural network architecture combining a ResNet18 encoder and a Spatial Transformer block for automatic alignment of chest X-ray images. Our approach addresses the limitations of traditional image alignment methods and can adapt to complex transformations and variations in the dataset. By providing more accurately aligned images for analysis, our method significantly enhances the performance of downstream tasks in chest X-ray image analysis.
+In this work, we implement a novel preprocessing framework that leverages a 
+ neural network architecture combining a ResNet18 encoder and a Spatial 
+ Transformer block for automatic alignment of chest X-ray images. Due to the 
+ absence of labeled data we use consistency loss, first introduced in Style 
+ Transfer approach, for training this architecture in unsupervised manner.
 
 The main contributions of this report are as follows:
 
-We propose a novel preprocessing framework for automatic alignment of chest X-ray images, designed to improve the performance of downstream tasks such as disease classification, segmentation, and others.
-We introduce a neural network architecture that combines a ResNet18 encoder and a Spatial Transformer block for efficient and robust alignment of chest X-ray images.
-We demonstrate the effectiveness of our method through extensive experiments on a large dataset of chest X-ray images, showing significant improvements in the performance of downstream tasks when using our aligned images.
-We provide a comprehensive comparison of our approach with traditional image alignment techniques, highlighting the advantages of our method in terms of adaptability to complex transformations and variations in the dataset.
-By addressing the alignment challenges in chest X-ray image analysis, our work has the potential to significantly impact clinical practice by enhancing the diagnostic utility of these images.
+We implement a novel preprocessing framework for automatic alignment of chest
+ X-ray images, which consists of a neural network architecture that combines 
+ a ResNet18 encoder with a Spatial Transformer block and consistency loss. 
+We properly tune the parameters of the algorithm to achieve good performance
+ and prevent divergence.
+We provide evaluation of the improvement of quality for such 
+ \href{https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14}{downstream task}
+ as classification of fourteen diseases in ChestX-ray14 dataset.
+
+\begin{figure}[ht]\label{initial_images}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth]{../images/initial_images.png}}
+    \caption{Examples of not aligned images in ChestX-ray14}
+    \end{center}
+    \vskip -0.2in
+\end{figure}
 
 \section{Related work}\label{related_work}
 
-\underline{\textbf{Related work}} Review of old, recent and state-of-the art methods for solving the problem students encounter in their project. At least 4-5 references should be mentioned with a brief discussion of their drawbacks and advantages. We refer to \cite{DataSet}, \cite{XRayDiagnosis}, \cite{SpatialTransform}, \cite{StyleTransfer}
+At the moment, the approach we have taken as a basis from the article \cite{XRayDiagnosis}
+ in fact has no analogues. As an alternative scheme, in theory it is 
+ possible to apply all kinds of affine transforms as augmentations of the dataset, 
+ in order to make the model which solves the downstream problem invariant to such 
+ transformations. For example, ChexNet \cite{CheXNet} introduces random horizontal flipping 
+ as an augmentation to make model invariant to such transformation.
+ Chexclusion \cite{CheXclusion} improves the initial scheme, adding random rotation to the augmentations
+ set. Rotation range is tuned using a standard cross validation scheme.
+ Nevertheless, we tend to believe that the approach we have chosen 
+ is more universal and can show better results. Furthermore, the method we have 
+ chosen is able to crop the edges of images that do not contain X-rays, which 
+ increases the information content of each individual image. The basis of our 
+ method is the Spatial Transformer architecture described in \cite{SpatialTransform}. 
+ Training with this approach is based on the concept of Style Transfer \cite{StyleTransfer} and 
+ the final pipeline is essentially a combination of these two ideas.
 
 \section{Algorithms and Models}\label{algorithms_and_models}
+Full and reproducible code for the pipeline described below may be 
+found at \href{https://github.com/bizzare-hub/Chest-Xray-alignment-using-STN.git}{the project's repo}.
 
-\underline{\textbf{Algorithms and Models}} and \underline{\textbf{Experiments and Results.}}
+\subsection{The architecture}
 
-Two main sections describing key students' results. All the relevant content should be distributed among these sections based on the topic of project, stated goals, project plan and students' decision. In general, these sections should contain clear experimental setup and a  link to a \textbf{github repo} (again!) with a fully reproducible code. \textbf{Projects without a github repo with a reproducible code will be graded as zero.}
+As we have already said, our goal is to achieve the perfect alignment of the input 
+ Chest X-ray image by regressing the corresponding affine transform parameters. To 
+ correctly obtain them, we build the network on the idea of spatial transformer 
+ block, first introduced in \cite{SpatialTransform}. The idea is to use a simple 
+ localization network consisting of several linear layers to regress the affine 
+ matrix parameters, and then apply a warping transform to the initial image to 
+ obtain its aligned variant.
+Because in our formulation we do not have a training dataset for supervised 
+ learning, we follow the idea stated in \cite{XRayDiagnosis}. Specifically, we 
+ align all the images to a single target image, which we call ``Canonical chest''. 
+ To obtain it, we randomly sample 1000 images from ChestX-ray14 dataset and 
+ average them. After that, we also crop out the central view tightly bounding the 
+ two lungs.
 
-Students have to explicitly describe the algorithms, models, methods, approaches they used for solving their project's problem. Students should explain the motivation for choosing the models, possible benefits and drawbacks of the choice in application to their problem. The used metrics for accessing the quality of the results should also be described.
+\begin{figure}[ht]\label{canonical_chest}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth/2]{../images/canonical_chest.png}}
+    \caption{Canonical chest representation}
+    \end{center}
+    \vskip -0.2in
+\end{figure}
 
-The section(s) must contain a \textbf{complete description of the datasets} used for experiments with all the required download links. This includes number of features, samples, types of features (categorial, real, pixels, etc.), description of key features, etc. If well-known datasets are used, e.g. MNIST, CIFAR, etc., it is enough to put a link to a dataset (or related paper) without a detailed description.
+\subsubsection{Alignment module}
+After obtaining the canonical chest as the target image, we frame the transformation
+ learning as minimizing the structure divergence between the transformed image and
+ the target image. Let $ I $ and $ T $ denote the transformed input image and the 
+ target image respectively. Given $ I $, and the alignment network $ \phi_A $, we 
+ obtain the transformed image $ \phi_A(I) $. To let $ \phi_A(I) $ have desired 
+ structure, we minimize the structure loss 
+\begin{equation}
+    L_s = f(\phi_A(I), T).
+\end{equation}
+Specifically, we use a light-weighted \href{https://pytorch.org/vision/master/models/generated/torchvision.models.resnet18.html#torchvision.models.resnet18}{ResNet18} 
+ as the backbone of $\phi_A$ plus two fully-connected layers. The output of the alignment network is a group of five 
+ parameters $(t_x, t_y, s_x, s_y, \theta)$ of the affine transformation. Here $t_x$ 
+ and $t_y$  stand for horizontal and vertical displacements, $s_x$ and $s_y$ stand 
+ for horizontal and vertical scaling, $\theta$ stands for the rotation angle. After 
+ all, the transformation $\phi_A(I)$ represents in the following way:
+\begin{equation}
+    \phi_A(I) = B \left(
+    \begin{pmatrix}
+        s_x \cos \theta & -s_y \sin \theta t_x \\
+        s_x \sin \theta & s_y \cos \theta t_y 
+    \end{pmatrix} 
+    G(I) , I \right),
+\end{equation}
+where $ B $ stands for a bilinear interpolating function, and $ G $ for a regular 
+ grid function.
 
-All the \textbf{preprocessing} and data-handling steps should be presented in these sections. Make sure to answer relevant questions, e.g. the following ones: How data was normalized? How data augmentation was done? How data was cleaned from outliers or anomalies? How the data was splitted for train, test, validation?
+ \begin{figure}[ht]\label{spatial_transformer}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth]{../images/spatial_transformer.jpg}}
+    \caption{Spatial transformer architecture}
+    \end{center}
+    \vskip -0.2in
+\end{figure}
 
-All \textbf{training parameters} should be listed. Which methods did you try and with which parameters (e.g. neural network architectures, weight initialization, optimizers, optimizer parameters, number of epochs, iterations, cross validation, exact number of restarts, etc.)?
+\subsubsection{Losses}
+
+To encourage $ \phi_A(I) $ to have similar structure with $ T $ without annotated 
+ data, as an alternative, we propose to use the perceptual loss \cite{StyleTransfer},
+ and, specifically, its feature reconstruction loss part, in order to preserve the
+ content structure.
+\begin{equation}
+    L_{\text{feat}}(\phi_A(I), T) = \frac{|| N_{\text{feat}}(\phi_A(I)) -
+    N_{\text{feat}}(T) ||_2}{CHW}.
+\end{equation}
+Here $ N_{\text{feat}} $ stands for some feature extraction convolutional network, 
+ which is \href{https://pytorch.org/vision/stable/models/generated/torchvision.models.vgg16.html?highlight=vgg}{VGG16} 
+ in our case. We also include the consistency loss $ L_{\text{pixel}}(\phi_A(I), T) $ to preserve the
+ initial image, which is actually just a metric generated by the second Euclidean norm.
+ However, during experiments, we met some problems with stable convergence of 
+ alignment model. The problem was hidden in the fact, that pretrained feature 
+ extraction network is learned to process the images, while at the same time we 
+ passed to it our canonical chest, which is in fact some other entity. To this end,
+ we proposed additionally to $ T $ also collect \textit{Canonical features}, which
+ we denote $ T_{\text{feat}} $. This is an average of randomly drawn $ n $ images' feature 
+ maps obtained by passing them through our feature extraction network.
+\begin{equation}
+    T_{\text{feat}} = \sum_{k = 1}^{n} N_{\text{feat}}(I_k) 
+\end{equation}
+Then, the corresponing feature reconstruction loss representation changes --- $N_{\text{feat}}$
+is replaced with $T_{\text{feat}}$.
+
+\begin{figure*}[ht]\label{overall_architecture}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth * 2]{../images/overall_pipeline.png}}
+    \caption{First, we take as input a chest X-ray image, which is passed threw our alignment 
+    model, which consists of ResNet18 and STN block. From it, we obtain affine transform 
+    parameters, which we use to warp the initial image and obtain its aligned variant. 
+    Then, we use pretrained feature extractor (VGG16) to obtain the features maps to 
+    calculate $L_{\text{feat}}$ and $ L_{\text{pixel}} $.}
+    \end{center}
+    \vskip -0.2in
+\end{figure*}
+
+The final loss is a combination of two loss functions, where $ \lambda $ is a weight 
+ to balance the impact of the consistency loss:
+\begin{equation}
+    L = L_{\text{feat}} + \lambda L_{\text{pixel}}.
+\end{equation}
+
+
+\subsubsection{Overall architecture}
+
+First, we take as input a chest X-ray image, which is passed threw our alignment 
+model, which consists of ResNet18 and STN block. From it, we obtain affine transform 
+parameters, which we use to warp the initial image and obtain its aligned variant. 
+Then, we use pretrained feature extractor (VGG16) to obtain the features maps to 
+calculate $L_{\text{feat}}$ and $ L_{\text{pixel}} $.
+
+
+\subsection{The dataset}
+For training and evaluation we use ChestX-ray14 dataset \cite{DataSet}, which 
+contains 112120 chest X-ray images of 30805 unique patients. Each radiography 
+is labeled with one or multiple types of 14 diseases: Atelectasis, 
+Cardiomegaly, Effusion, Infiltration, Mass, Nodule, Pneumonia, Pneumothorax, 
+Consolidation, Edema, Emphysema, Fibrosis, Pleural Thickening and Hernia. 
+Original images are stored in grayscale format and have size 1024x1024. 
+
+\subsection{Preprocessing}
+To train our alignment network, we don't need the actual labels, but only Chest 
+X-rays, so we omit them during our dataset pipeline construction.
+
+Our pipeline contains ResNet18 and VGG16 networks pretrained on the ImageNet 
+dataset \cite{ImageNet} and expect (3, 320, 320) data as input. Therefore, we 
+shrink the original image of size 1024x1024 to be of size 320x320 and convert 
+single channel X-ray images into 3-channel RGB images by simple tiling of the 
+channel axis.
+
+During preprocessing, we normalize the image by scaling it to [0; 1] range. As 
+for augmentations, we randomly shift, scale rotate the image by maximum value 
+of 10 degrees to enrich the disalignment variations in our dataset. Also 
+standard color augmentations such as brightness and contrast are applied. 
+Finally, we normalize image by mean and std from ImageNet dataset.
+
+As visually satisfactory results on the whole dataset would already may be 
+considered as a success, and moreover any quantitative evaluations of the 
+results are questionable, we haven't performed any splitting of our dataset, 
+limiting our validation to online evaluation of the transformed images during 
+training. We visualize 1 random result of our model work once every 100 steps.
+
+\subsection{Training process}
+The weights of the networks are initialized with weights pretrained on ImageNet. 
+The weight of reconstruction loss is set to 20. The end-to-end model is trained 
+by AdamW optimizer with standard parameters. We set the batch size 8, initial 
+learning rate 1e-4 and weight decay 1e-4. The learning rate starts from 1e-4 
+and decreases linearly to 1e-6 at the end of learning process. The training 
+procedure is done in 5 epochs in total. One epoch takes approx. 7000 
+forward-backward steps. With our setup (2 Nvidia Geforce GTX 1080 TI, 11gb) it 
+required 1.5h to train the model.
+
+\begin{figure*}[ht]\label{classification}
+     \vskip 0.2in
+     \begin{center}
+     \centerline{\includegraphics[width=\columnwidth * 2]{../images/classification.png}}
+     \caption{Classification ROC AUC}
+     \end{center}
+     \vskip -0.2in
+\end{figure*}
 
 \section{Experiments and Results}\label{experiments_and_results}
 
-We highly encourage students to additionally present experimental results in a form of \textbf{tables and plots} (e.g. generated images for projects related to image generation, segmented images for project related to segmentation, table with scores for projects related to prediction, etc.). All the experimental results must be properly discussed and explained. If you experience problems with creating tables in \LaTeX, use e.g. \href{https://www.tablesgenerator.com}{this online tool} or any its analog. In Python's \textit{Pandas} library there are also methods to convert \href{https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.to_latex.html}{\textbf{pd.DataFrame}} to \LaTeX  .
+\subsection{Visualizations}
+
+Here we present some examples of our Alignment network on ChestX-ray14 dataset 
+ (``Initial'' is an input chest, ``Aligned'' is the aligned version outputted by our model):
+ 
+\begin{figure}[ht]\label{visualization}
+     \vskip 0.2in
+     \begin{center}
+     \centerline{\includegraphics[width=\columnwidth]{../images/alignment_results.png}}
+     \caption{Alignment results visualization}
+     \end{center}
+     \vskip -0.2in
+\end{figure}
+
+ 
+\subsection{Classification}
+ 
+In addition to the visualizations, we also evaluated our model performance 
+ on downstream \href{https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14}{classification task}. 
+ Specifically, we constructed a standard training pipeline following CheXNet 
+ paper \cite{CheXNet} and performed 2 experiments on different datasets: standard Chest X-ray14 
+ and it's aligned version, created using our alignment model.
+
+
+
+To train and test our models we use a public data split: 86524 and 25596 chest 
+X-ray images for training and evaluation purposes. Data split is performed on 
+patient level, which means all patient images are located only in one of the 
+splits.
+
+We formulate the Chest X-ray disease recognition as multi-label classification 
+problem. Our network outputs a 14-dimensional vector indicating a positive 
+probability for each kind of listed diseases. As an objective we use standard 
+binary cross entropy loss, calculated for each class separately and averaged 
+after t produce a single scalar.
+
+The results on all 14 classes are shown in the tables, metric is 
+ROC AUC (Receiver Operating Charachteristic Area Under Curve).
+
+From the results we can see that our alignment module does improve the classification 
+model results on 8 out of 14 diseases.
+
 
 \section{Conclusion}\label{conclusion}
+In this report, we have presented a novel preprocessing framework for automatic 
+alignment of chest X-ray images, aimed at improving the performance of 
+downstream tasks such as disease classification, segmentation, and others. Our 
+approach leverages a neural network architecture that combines a ResNet18 
+encoder and a Spatial Transformer block, enabling efficient and robust 
+alignment of input images.
 
-\underline{\textbf{Conclusion}} Concise description of experimental results and outcomes, including possible directions for further work.
+The results of experiments we have conducted show visually pleasing and 
+promising results, providing satisfactory grounds for future development of the 
+method, which, compared to classical augmentation, offers several advantages
+including adaptability to complex transformations, data compression and 
+absorbing computational costs of learning variously transformed data that 
+allows potentional reduce of classification models complexity, making it a 
+valuable preprocessing tool.
 
-Conclusion:
-
-In this paper, we have presented a novel preprocessing framework for automatic alignment of chest X-ray images, aimed at improving the performance of downstream tasks such as disease classification, segmentation, and others. Our approach leverages a neural network architecture that combines a ResNet18 encoder and a Spatial Transformer block, enabling efficient and robust alignment of input images.
-
-Through extensive experiments on a large dataset of chest X-ray images, we demonstrated the effectiveness of our method in enhancing the performance of downstream tasks, outperforming traditional image alignment techniques. Our approach offers several advantages, including adaptability to complex transformations and variations in the dataset, making it a valuable preprocessing tool for chest X-ray image analysis in clinical practice.
-
-As future work, we plan to explore the integration of additional deep learning techniques to further improve the alignment process and investigate the applicability of our framework to other medical imaging modalities. Additionally, we aim to develop end-to-end models that combine image alignment and downstream tasks in a single architecture to further optimize performance and streamline the diagnostic process.
+As future work, we plan to explore the integration of additional deep learning 
+techniques to further improve the alignment process and investigate the 
+applicability of our framework to other medical imaging modalities. 
+Additionally, we aim to develop end-to-end models that combine image alignment 
+and downstream tasks in a single architecture to further optimize performance 
+and streamline the diagnostic process.
 
 \bibliography{references}
 \bibliographystyle{icml2020}
@@ -107,11 +357,11 @@ As future work, we plan to explore the integration of additional deep learning t
 \appendix
 \section{Team member's contributions}
 \label{appendix-contrib}
-Explicitly stated contributions of each team member to the final project.
+
 \subsection*{Andrey Galichin (60\% of work)}
 \begin{itemize}
-    \item Reviewing literate on the topic (3 papers)
-    \item Coding the main pipelinr
+    \item Reviewing literature on the topic
+    \item Coding the main pipeline
     \item GitHub Repo Support
 \end{itemize}
 
@@ -119,34 +369,32 @@ Explicitly stated contributions of each team member to the final project.
 \begin{itemize}
     \item Performing experiments
     \item Presentation design
-    \item Report
+    \item Writing the report
 \end{itemize}
 
 \subsection*{Arkadiy Vladimirov (20\% of work)}
 \begin{itemize}
     \item Performing experiments
     \item Presentation design
-    \item Report
+    \item Writing the report
 \end{itemize}
 
-\clearpage
+\newpage
 \section{Reproducibility checklist}
 \label{appendix-checklist}
-Answer the questions of following reproducibility checklist. If necessary, you may leave a comment.
+
     \begin{enumerate}
     \item A ready code was used in this project, e.g. for replication project the code from the corresponding paper was used.
     \begin{itemize}
-        \item [\faCheckSquareO] Yes.
-        \item [\faSquareO] No.
+        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
-    
-    \textbf{General comment:} If the answer is \textbf{yes}, students must \underline{explicitly clarify} to which extent (e.g. which percentage of your code did you write on your own?) and which code was used.
     
     \textbf{Students' comment:} None
     \item A clear description of the mathematical setting, algorithm, and/or model is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -155,7 +403,7 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     
     \item A link to a downloadable source code, with specification of all dependencies, including external libraries is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -164,7 +412,7 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     
     \item A complete description of the data collection process, including sample size, is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -174,15 +422,15 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     \item A link to a downloadable version of the dataset or simulation environment is included in the report.
     \begin{itemize}
         \item [\faSquareO] Yes.
-        \item [\faSquareO] No.
+        \item [\faCheckSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
     
-    \textbf{Students' comment:} None
+    \textbf{Students' comment:} A reference to the article \cite{DataSet} about the dataset itself with a link to it is provided instead.
     
     \item An explanation of any data that were excluded, description of any pre-processing step are included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -191,7 +439,7 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     
     \item An explanation of how samples were allocated for training, validation and testing is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -201,18 +449,20 @@ Answer the questions of following reproducibility checklist. If necessary, you m
     \item The range of hyper-parameters considered, method to select the best hyper-parameter
 configuration, and specification of all hyper-parameters used to generate results are included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
     
-    \textbf{Students' comment:} None
+    \textbf{Students' comment:} Due to the complexity of the model and the 
+    amount of data automatic search for the best hyper-parameter configuration 
+    is not quite applicable.
     
     \item The exact number of evaluation runs is included.
     \begin{itemize}
         \item [\faSquareO] Yes.
         \item [\faSquareO] No.
-        \item [\faSquareO] Not applicable.
+        \item [\faCheckSquareO] Not applicable.
     \end{itemize}
     
     \textbf{Students' comment:} None
@@ -228,7 +478,7 @@ configuration, and specification of all hyper-parameters used to generate result
     
     \item A clear definition of the specific measure or statistics used to report results is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
@@ -239,14 +489,14 @@ configuration, and specification of all hyper-parameters used to generate result
     \begin{itemize}
         \item [\faSquareO] Yes.
         \item [\faSquareO] No.
-        \item [\faSquareO] Not applicable.
+        \item [\faCheckSquareO] Not applicable.
     \end{itemize}
     
     \textbf{Students' comment:} None
     
     \item A description of the computing infrastructure used is included in the report.
     \begin{itemize}
-        \item [\faSquareO] Yes.
+        \item [\faCheckSquareO] Yes.
         \item [\faSquareO] No.
         \item [\faSquareO] Not applicable.
     \end{itemize}
