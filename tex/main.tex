@@ -99,7 +99,11 @@ At the moment, the approach we have taken as a basis from the article \cite{XRay
  in fact has no analogues. As an alternative scheme, in theory it is 
  possible to apply all kinds of affine transforms as augmentations of the dataset, 
  in order to make the model which solves the downstream problem invariant to such 
- transformations. Nevertheless, we tend to believe that the approach we have chosen 
+ transformations. For example, ChexNet \cite{CheXNet} introduces random horizontal flipping 
+ as an augmentation to make model invariant to such transformation.
+ Chexclusion \cite{CheXclusion} improves the initial scheme, adding random rotation to the augmentations
+ set. Rotation range is tuned using a standard cross validation scheme.
+ Nevertheless, we tend to believe that the approach we have chosen 
  is more universal and can show better results. Furthermore, the method we have 
  chosen is able to crop the edges of images that do not contain X-rays, which 
  increases the information content of each individual image. The basis of our 
@@ -199,20 +203,25 @@ Here $ N_{\text{feat}} $ stands for some feature extraction convolutional networ
 Then, the corresponing feature reconstruction loss representation changes --- $N_{\text{feat}}$
 is replaced with $T_{\text{feat}}$.
 
+\begin{figure*}[ht]\label{overall_architecture}
+    \vskip 0.2in
+    \begin{center}
+    \centerline{\includegraphics[width=\columnwidth * 2]{../images/overall_pipeline.png}}
+    \caption{First, we take as input a chest X-ray image, which is passed threw our alignment 
+    model, which consists of ResNet18 and STN block. From it, we obtain affine transform 
+    parameters, which we use to warp the initial image and obtain its aligned variant. 
+    Then, we use pretrained feature extractor (VGG16) to obtain the features maps to 
+    calculate $L_{\text{feat}}$ and $ L_{\text{pixel}} $.}
+    \end{center}
+    \vskip -0.2in
+\end{figure*}
+
 The final loss is a combination of two loss functions, where $ \lambda $ is a weight 
  to balance the impact of the consistency loss:
 \begin{equation}
     L = L_{\text{feat}} + \lambda L_{\text{pixel}}.
 \end{equation}
 
-\begin{figure*}[ht]\label{overall_architecture}
-    \vskip 0.2in
-    \begin{center}
-    \centerline{\includegraphics[width=\columnwidth * 2]{../images/overall_pipeline.png}}
-    \caption{Training pipeline}
-    \end{center}
-    \vskip -0.2in
-\end{figure*}
 
 \subsubsection{Overall architecture}
 
@@ -263,29 +272,39 @@ procedure is done in 5 epochs in total. One epoch takes approx. 7000
 forward-backward steps. With our setup (2 Nvidia Geforce GTX 1080 TI, 11gb) it 
 required 1.5h to train the model.
 
-\section{Experiments and Results}\label{experiments_and_results}
-
-\subsection{Visualizations}
-
-Here we present some examples of our Alignment network on ChestX-ray14 dataset 
- (``Initial'' is an input chest, ``Aligned'' is the aligned version outputted by our model):
-
- \begin{figure*}[ht]\label{classification}
+\begin{figure*}[ht]\label{classification}
      \vskip 0.2in
      \begin{center}
      \centerline{\includegraphics[width=\columnwidth * 2]{../images/classification.png}}
      \caption{Classification ROC AUC}
      \end{center}
      \vskip -0.2in
- \end{figure*}
+\end{figure*}
+
+\section{Experiments and Results}\label{experiments_and_results}
+
+\subsection{Visualizations}
+
+Here we present some examples of our Alignment network on ChestX-ray14 dataset 
+ (``Initial'' is an input chest, ``Aligned'' is the aligned version outputted by our model):
  
- \subsection{Classification}
+\begin{figure}[ht]\label{visualization}
+     \vskip 0.2in
+     \begin{center}
+     \centerline{\includegraphics[width=\columnwidth]{../images/alignment_results.png}}
+     \caption{Alignment results visualization}
+     \end{center}
+     \vskip -0.2in
+\end{figure}
+
  
- In addition to the visualizations, we also evaluated our model performance 
+\subsection{Classification}
+ 
+In addition to the visualizations, we also evaluated our model performance 
  on downstream \href{https://paperswithcode.com/sota/multi-label-classification-on-chestx-ray14}{classification task}. 
  Specifically, we constructed a standard training pipeline following CheXNet 
  paper \cite{CheXNet} and performed 2 experiments on different datasets: standard Chest X-ray14 
-and it's aligned version, created using our alignment model.
+ and it's aligned version, created using our alignment model.
 
 
 
@@ -306,14 +325,6 @@ ROC AUC (Receiver Operating Charachteristic Area Under Curve).
 From the results we can see that our alignment module does improve the classification 
 model results on 8 out of 14 diseases.
 
-\begin{figure}[ht]\label{visualization}
-    \vskip 0.2in
-    \begin{center}
-    \centerline{\includegraphics[width=\columnwidth]{../images/alignment_results.png}}
-    \caption{Alignment results visualization}
-    \end{center}
-    \vskip -0.2in
-\end{figure}
 
 \section{Conclusion}\label{conclusion}
 In this report, we have presented a novel preprocessing framework for automatic 
