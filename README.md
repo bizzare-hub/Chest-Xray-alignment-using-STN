@@ -28,7 +28,8 @@ Evaluation of the model is issued in the form of pretty self-explanatory single 
 Minimal required steps to run the training pipeline:
 
 * download [Chest X-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC/folder/36938765345) dataset (download full `images/` directory and unzip all the data in it)
-* in `configs/data/nih.yaml`, change the **main_dir** parameter to the directory path where the dataset downloaded from the previous step is located
+* in `configs/data/nih.yaml`, change the **main_dir** parameter to the directory path where the dataset downloaded from the previous step is located.
+  You should also change **experiment_path** and **experiment_name* parameters in `configs/config.yaml` file. This will be the path where logs and checkpoint will be stored. The structure will be as follows: `experiment_path/checkpoints (or logs)/experiment_name/`
 * run `python run_training.py` in the following directory
 
 ### In-depth description
