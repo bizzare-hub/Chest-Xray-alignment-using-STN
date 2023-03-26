@@ -3,6 +3,8 @@ from typing import Union
 from hydra.utils import instantiate
 from omegaconf import DictConfig
 
+from tqdm import tqdm
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -62,6 +64,16 @@ class PLAlignmentModel(LightningModule):
         anchor = self.train_dataset.anchor[None]
         anchor = anchor.to(self.device)
         self._anchor_features = [anchor] + self._model.extract_features(anchor)
+
+        # anchor_features = [0]
+        # n_samples = 1000
+        # for idx in range(n_samples):
+        #     image = self.train_dataset[idx]
+        #     image = F.interpolate(image[None], size=[320, 256])
+        #     features = self._model.extract_features(image.to(self.device))
+        #     anchor_features = [anchor_feat + (feat / n_samples)
+        #                        for anchor_feat, feat in zip(anchor_features, features)]
+        # self._anchor_features = [anchor] + anchor_features
 
         logger.info("Calculating anchor features: Done")
     
